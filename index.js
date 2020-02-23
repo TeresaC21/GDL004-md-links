@@ -12,12 +12,19 @@ if (extPath == '.md') {
 function readLinks() {
 fs.readFile(processExt, 'utf8', (err, data) => {
     console.log(processExt);
-    //console.log(data);
-    //let expReg = new RegExp("https?:\/\/[\w\-\.]+\.\w{2,5}\/?\S*");
-    let expReg = new RegExp(/(https?:\/\/[\w\.\-]+\.\w{2,5}(\/\S*)?)/g);
-    //let expReg = new RegExp("\\w+\\s","g");
+    if (err) {
+        console.log(err);
+    } else {
+   // let expReg = new RegExp(/(https?:\/\/[\w\.\-]+\.\w{2,5}(\/\S*)?)/g);
+    let expReg = new RegExp(/https?:\/\/[\w\.\-]+\.\w{2,5}[^\s\)]+/g)
     let myArray = data.match(expReg);
-    console.log (myArray);
+    console.log (myArray); 
+    }
 })
 }
-console.log(readLinks(), 'HAAAAA');
+readLinks();
+
+
+    //console.log(data);
+    //let expReg = new RegExp("https?:\/\/[\w\-\.]+\.\w{2,5}\/?\S*");
+     //let expReg = new RegExp("\\w+\\s","g");
