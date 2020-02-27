@@ -19,13 +19,13 @@ if (process.argv[3] == '--validate') {
 } else if (process.argv[3] == '--stats') {
     //Total: 3
     //Unique: 3
-    return valid.extract()
-
+   // return valid.extract()
+   return valid.counterStats()
 } else if (process.argv[3] == '--stats --validate') {
     //Total: 3
     //Unique: 3
     //Broken: 1
-    return valid.extract()
+    //return valid.extract()
 
 } else {
 
