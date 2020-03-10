@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const processExt = process.argv[2];
 const fetch = require('node-fetch')
+const chalk = require('chalk');
 
 function extractMD() {
     const extPath = path.extname(processExt);
@@ -11,7 +12,7 @@ function extractMD() {
         console.log('NO SOY .MD');
     }
 }
-// *********** Function read file .md and search the links info *******
+// *********** MD search the links *******
 function readLinks(processExt) {
     return new Promise(function (resolve, reject) {
         fs.readFile(processExt, 'utf8', (err, data) => {
@@ -25,60 +26,110 @@ function readLinks(processExt) {
         })
     })
 }
-
+// *********** True --validate *******
 function validateLinks(links) {
     let list = [];
-    for (let i = 0; i < links.length; i++) {
-        //fetch('https://es.wikipedia.org/wiki/Markdown')
-        fetch(links[i])
-            .then(res => {
-                //console.log(res);//console.log(res.url)//console.log(res.ok);// console.log(res.status)// console.log(res.json());
+    let coounterOk = [];
+    let coounterFail = [];
+    let promises = links.map((elem) => {
+        return fetch(elem);
+    })
+    Promise.all(promises)
+        .then((data) => {
+           
+            for (let i = 0; i < data.length; i++) {
+                let linkInfo = data[i];
                 const obj = {
-                    url: res.url,
-                    ok: res.ok,
-                    status: res.status
+                    url: linkInfo.url,
+                    statusText: linkInfo.statusText,
+                    statusNum: linkInfo.status
+                }
+                if (obj.statusNum === 200) {
+                    coounterOk.push(obj)
+                    /*  coounterOk.push(` Href: ${obj.url} Status: ${obj.statusNum} Text: ${obj.statusText}`)  */
+                } else {
+                    coounterFail.push(obj)
+                    /*    coounterFail.push(`Href: ${obj.url} Status: ${obj.statusNum} Text: ${obj.statusText}`) */
+                }
+            }
+            //console.log(list);
+            console.log(coounterOk);
+            console.log(coounterFail);
+            //console.table(chalk.green(coounterOk));
+            //console.table(chalk.red(coounterFail)); 
+        }).catch((err => {
+            console.log(err);
+        }))
+}
+// *********** True --stats *******
+function counterStats(links) {
+    let list = [];
+    let coounterOk = 0;
+    let counterFail = 0;
+    let promises = links.map((elem) => {
+        return fetch(elem);
+    })
+    Promise.all(promises)
+        .then((data) => {
+            for (let i = 0; i < data.length; i++) {
+                let linkInfo = data[i];
+                const obj = {
+                    statusNum: linkInfo.status,
                 }
                 list.push(obj);
-                console.log(list, 'es lista');
+            }
+            list.map((elem) => {
+                if (elem.statusNum < 406) {
+                    return coounterOk++
+                } 
             })
-            .catch((error) =>
-                console.log('Hubo un problema con la petición Fetch:', error));
-    }
+            console.log(chalk.green.bold(`Total: ${coounterOk}`)); // contar links
+            console.log(chalk.yellow(`Unique: ${coounterOk}`));
+        }).catch((err => {
+            console.log(err);
+        }))
 }
-// libreria async
-// combinacion promises, promises.all, encadenamiento de promesas, async/await
 
-function counterStats(list) {
-    console.log('HOLA DESDE COUNTERSTATS');
-    console.log(list, 'YESSSS');
-    let coounterOk = 1;
-    let counterFail = 1;
-    for (let i = 0; i < lista.length; i++) {
-        //console.log(list[i]);
-        fetch(list[i])
-            .then(res => {
-                console.log(res.ok);
-
-                if (res.status >= 200 && res.status <= 300) {
-                    let linkOk = coounterOk++
-                    console.log(linkOk, '200'); // contar links
-                } else {
-                    let linkFail = counterFail++
-                    console.log(linkFail, '404');
+function statsValidate(links) {
+    let list = [];
+    let total = 0;
+    let broken = 0;
+    let promises = links.map((elem) => {
+        return  fetch(elem);
+    })
+    Promise.all(promises)
+        .then((data) => {
+            
+            data.forEach(element => {
+                let linkInfo = element
+                let obj = {
+                    statusNum: linkInfo.status
                 }
+                list.push(obj);
             })
-            .catch((error) =>
-                console.log('Hubo un problema con la petición Fetch:', error));
-    }
+            list.map((elem) => {
+                if (elem.statusNum >= 404) {
+                   return broken++
+                } else {
+                    total++
+                }
+            });
+            console.log(chalk.blue('Broken:', broken));
+        }).catch((err) => {
+            console.log(err);
+
+        })
+
+
 }
 
 module.exports = {
     extractMD,
     readLinks,
     validateLinks,
+    counterStats,
+    statsValidate
 }
-
-//module.exports.extractMD = extractMD;
 /*module.exports = {
     extracting: function () {},
     readLinks: function () {} */

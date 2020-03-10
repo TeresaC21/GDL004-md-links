@@ -1,45 +1,37 @@
-const fs = require('fs');
-const path = require('path');
-const processExt = process.argv[2];
 const valid = require('./validate.js');
-console.log('hola desde index');
+const path = process.argv[2];
+const option = process.argv[3];
 
-function call(path) {
-
+function call(path, option) {
+    //console.log(path, 'soy path');console.log(option, 'soy option');
     let md = valid.extractMD(path);
-    let promise = valid.readLinks(processExt);
+    let promise = valid.readLinks(path);
     
-    promise
-        .then(function (result) {
-            if (process.argv[3] == '--validate') { //revisar si existe bandera de validate
-                valid.validateLinks(result);
-            } //funcion validar links validateLinks()//console.log(result, 'good');
-        })
-        .catch(function (err) {
-            console.log(err, 'hay un error');
-        })
-
-    if (process.argv[3] == '--stats') {
-        //Total: 3
-        //Unique: 3
-        // return valid.extract()
-        // return valid.counterStats()
-    } else if (process.argv[3] == '--stats --validate') {
-        //Total: 3
-        //Unique: 3
-        //Broken: 1
-        // return valid.extract()
-
-    } else {
-
+         promise
+            .then((result) => {
+                if (option == '--validate') { //revisar si existe bandera de validate
+                    valid.validateLinks(result);
+                }
+                return result;
+            })
+            .then((result) => {
+                if (option == '--stats') { //revisar si existe bandera de stats
+                    valid.counterStats(result);
+                }
+                return result;
+            })
+            .then((result) => {
+                if (option == '--stats' && process.argv[4] == '--validate') {
+                   valid.statsValidate(result)
+                }
+            })
+            .catch ((error) => {
+                console.log(error);
+            })
     }
 
+
+//call(processExt)
+module.exports = {
+    call
 }
-call(processExt)
-
-
-/*  La función debe retornar una promesa (Promise) que resuelva a un arreglo (Array) de objetos (Object), 
-    donde cada objeto representa un link y contiene las siguientes propiedades:
-href: URL encontrada.
-text: Texto que aparecía dentro del link (<a>).
-file: Ruta del archivo donde se encontró el link. */

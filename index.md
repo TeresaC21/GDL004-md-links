@@ -3,6 +3,10 @@
 - [semver](https://semver.org/).
 - [Parsing](https://en.wikipedia.org/wiki/Parsing).
 - [markdown](https://daringfireball.net/projects/markdown/syntax).
+- [Path](https://nodejs.org/api/path.html)
+- [Linea de comando CLI](https://medium.com/netscape/a-guide-to-create-a-nodejs-command-line-package-c2166ad0452e)
+- [link fail](https://algo.com/2/3/)
+- [link fail](https://algo.com/2/3/)
 
 ## Tips
 

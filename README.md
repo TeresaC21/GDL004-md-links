@@ -1,3 +1,7 @@
+
+
+
+
 # Markdown Links
 
 ## Índice
@@ -365,3 +369,59 @@ si tienes dudas existenciales con respecto a estas decisiones. No existe una
 - [ ] Pruebas unitarias cubren un mínimo del 70% de statements, functions,
   lines, y branches.
 - [ ] Pasa tests (y linters) (`npm test`).
+
+
+
+
+# Markdown Links  CLI
+En este proyecto vamos a poder cosultar si los links que incluyes en tu README o cualquier otro archivo no esten rotos validando su status, obteniendo sus estadisticos y consultando si hay algun link roto.
+
+### Que se utilizo en nuestra proyecto
+
+* Modulos usados
+```
+Fetch. Para poder hacer las consultas al servidor http de los links encontrados.
+Chalk: La misma se utilizò para colocar colores a las respuestas del paquete por consola. Ejemplo: Estad-sticas-colores
+```
+
+* Dependencias dentro de node.js
+```
+Modulos
+process.argv: Para obtener lo ingresado por el usuario mediante la terminal, ejemplo README.md.
+Readfile: Se hizo uso de este para obtener la data del archivo que ingresa el usuario en terminal una vez ingresado.
+Path: Para poder normalizar una ruta y obtener posteriormente la ruta absoluta.
+```
+
+## Instrucciones
+Para un correcto uso, hay que seguir estas instrucciones.
+
+### Instalación
+
+* GLOBAL
+```
+npm install -g links-go-dev
+```
+* LOCAL
+```
+npm install links-go-dev
+```
+
+### Para usarlo
+* Global
+Ejecutamos **links-go-dev**
+* Local
+Añadir en el package.json
+```
+"scripts": {
+    "links-go-dev": "./node_modules/.bin/links-go-dev"
+},
+```
+Ejecutamos con
+```
+npm run links-go-dev 
+
+Necesitaras una vez ejecutado necesitaras indicar (path, options)
+Ejemplo 1: links-go-dev README.md --validate (Para conocer el status de tus links)
+Ejemplo 2: links-go-dev README.md --stats (Para conocer estadisticas de tus links)
+Ejemplo 3: links-go-dev README.md --stats --validate (Para conocer estadisticas y si se encuentra algun link roto)
+```

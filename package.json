@@ -6,12 +6,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Tess",
+  "author": "Tess Carbajal",
+  "url": "https://github.com/TeresaC21/GDL004-md-links",
+  "email": "terch.ross@gmail.com",
   "license": "ISC",
+  "bin": {
+    "links-go-dev": "./cli.js"
+  },
   "devDependencies": {
     "eslint": "^6.8.0"
   },
   "dependencies": {
-    "node-fetch": "^2.6.0"
+    "chalk": "^3.0.0",
+    "figlet": "^1.3.0",
+    "inquirer": "^7.0.6",
+    "node-fetch": "^2.6.0",
+    "shelljs": "^0.8.3"
   }
 }
